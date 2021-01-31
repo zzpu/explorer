@@ -68,15 +68,15 @@ public class BlockSyncService {
 		
 		Long maxBlock = this.dslContext.select(DSL.max(SYNC_NODE.SYNC_END_FULL)).from(SYNC_NODE).fetchOneInto(Long.class);
 		
-		Long syncStart = 0l;
+		Long syncStart = 0L;
 		Long syncStop = currentBlockNum;
 		
 		if (maxBlock==null) {
-			maxBlock=0l;
+			maxBlock= 0L;
 		}
 		
-		if (maxBlock==0l) {
-			syncStart = 0l;
+		if (maxBlock== 0L) {
+			syncStart = 0L;
 			syncStop = (long)config.getSyncBatchSize();		
 		}else {
 			syncStart = maxBlock;
@@ -159,16 +159,16 @@ public class BlockSyncService {
 		
 
 		
-		Long syncStart = 0l;
+		Long syncStart = 0L;
 		Long syncStop = currentBlockNum;
 		
 		if (maxBlock==null) {
-			maxBlock=0l;
+			maxBlock=0L;
 		}
 
 		
-		if (maxBlock==0l) {
-			syncStart = 0l;
+		if (maxBlock==0L) {
+			syncStart = 0L;
 			syncStop = (long)config.getSyncBatchSize();		
 		}else {
 			syncStart = maxBlock;
@@ -270,7 +270,7 @@ public class BlockSyncService {
 				.where(SYNC_BLOCK.BLOCK_NUM.lt(ULong.valueOf(fromBlockNum + 1))).fetchOneInto(Long.class);
 
 		if (dbCheckSum == null) {
-			dbCheckSum = 0l;
+			dbCheckSum = 0L;
 		}
 
 		if (lastCheckSum != dbCheckSum) {

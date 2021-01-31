@@ -60,59 +60,60 @@
 						</configuration>
 					</plugin>
 
-					<plugin>
-						<groupId>io.fabric8</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>start-database</id>
-								<phase>generate-sources</phase>
-								<goals>
-
-									<goal>stop</goal>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>stop-database</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<images>
-								<image>
-									<name>mysql:5.7</name>
-									<alias>mysql-test</alias>
-									<run>
-										cd
-										<log>
-											<enabled>true</enabled>
-										</log>
-										<env>
-											<MYSQL_ROOT_PASSWORD>1234</MYSQL_ROOT_PASSWORD>
-										</env>
-										<ports>
-											<port>3307:3306</port>
-										</ports>
-										<wait>
-											<time>${mysql.container.timeout}</time>
-											<tcp>
-												<ports>
-													<port>3306</port>
-												</ports>
-											</tcp>
-										</wait>
-									</run>
-								</image>
-							</images>
-						</configuration>
-					</plugin>
+<!--					<plugin>-->
+<!--						<groupId>io.fabric8</groupId>-->
+<!--						<artifactId>docker-maven-plugin</artifactId>-->
+<!--						<version>0.34.1</version>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>start-database</id>-->
+<!--								<phase>generate-sources</phase>-->
+<!--								<goals>-->
+<!--									<goal>stop</goal>-->
+<!--									<goal>start</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--							<execution>-->
+<!--								<id>stop-database</id>-->
+<!--								<phase>post-integration-test</phase>-->
+<!--								<goals>-->
+<!--									<goal>stop</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--						<configuration>-->
+<!--							<images>-->
+<!--								<image>-->
+<!--									<name>mysql:5.7</name>-->
+<!--									<alias>mysql-test</alias>-->
+<!--									<run>-->
+<!--										cd-->
+<!--										<log>-->
+<!--											<enabled>true</enabled>-->
+<!--										</log>-->
+<!--										<env>-->
+<!--											<MYSQL_ROOT_PASSWORD>1234</MYSQL_ROOT_PASSWORD>-->
+<!--										</env>-->
+<!--										<ports>-->
+<!--											<port>3307:3306</port>-->
+<!--										</ports>-->
+<!--										<wait>-->
+<!--											<time>${mysql.container.timeout}</time>-->
+<!--											<tcp>-->
+<!--												<ports>-->
+<!--													<port>3306</port>-->
+<!--												</ports>-->
+<!--											</tcp>-->
+<!--										</wait>-->
+<!--									</run>-->
+<!--								</image>-->
+<!--							</images>-->
+<!--						</configuration>-->
+<!--					</plugin>-->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>sql-maven-plugin</artifactId>
+						<version>1.5</version>
 
 						<dependencies>
 							<!-- specify the dependent jdbc driver here -->
@@ -125,9 +126,9 @@
 
 						<configuration>
 							<driver>com.mysql.jdbc.Driver</driver>
-							<url>jdbc:mysql://localhost:3307</url>
+							<url>jdbc:mysql://172.16.131.75:3306</url>
 							<username>root</username>
-							<password>1234</password>
+							<password>123456</password>
 						</configuration>
 
 						<executions>
@@ -136,9 +137,9 @@
 							<execution>
 								<id>create-db</id>
 								<phase>generate-sources</phase>
-								<goals>
-									<goal>execute</goal>
-								</goals>
+<!--								<goals>-->
+<!--									<goal>execute</goal>-->
+<!--								</goals>-->
 								<configuration>
 									<forceMojoExecution>true</forceMojoExecution>
 									<autocommit>true</autocommit>
@@ -154,11 +155,11 @@
 						<version>${flyway.version}</version>
 						<configuration>
 							<driver>com.mysql.jdbc.Driver</driver>
-							<url>jdbc:mysql://localhost:3307/tmp</url>
+							<url>jdbc:mysql://172.16.131.75:3306/tron?characterEncoding=utf-8</url>
 							<user>root</user>
-							<password>1234</password>
+							<password>123456</password>
 							<schemas>
-								<schema>tmp</schema>
+								<schema>tron</schema>
 							</schemas>
 							<locations>
 								<location>${flyway.locations}</location>
@@ -194,9 +195,9 @@
 							<!-- JDBC connection parameters -->
 							<jdbc>
 								<driver>com.mysql.jdbc.Driver</driver>
-								<url>jdbc:mysql://localhost:3307</url>
+								<url>jdbc:mysql://172.16.131.75:3306</url>
 								<user>root</user>
-								<password>1234</password>
+								<password>123456</password>
 							</jdbc>
 
 							<!-- Generator parameters -->
@@ -206,7 +207,7 @@
 									<includes>.*</includes>
 									<excludes>
 									</excludes>
-									<inputSchema>tmp</inputSchema>
+									<inputSchema>tron</inputSchema>
 									<outputSchema />
 								</database>
 								<target>
@@ -254,51 +255,6 @@
 					<plugins>
 						<!--This plugin's configuration is used to store Eclipse m2e settings
 							only. It has no influence on the Maven build itself. -->
-						<plugin>
-							<groupId>org.eclipse.m2e</groupId>
-							<artifactId>lifecycle-mapping</artifactId>
-							<version>1.0.0</version>
-							<configuration>
-								<lifecycleMappingMetadata>
-									<pluginExecutions>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>io.fabric8</groupId>
-												<artifactId>
-													docker-maven-plugin
-												</artifactId>
-												<versionRange>
-													[0.15.9,)
-												</versionRange>
-												<goals>
-													<goal>start</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.flywaydb</groupId>
-												<artifactId>
-													flyway-maven-plugin
-												</artifactId>
-												<versionRange>
-													[4.2.0,)
-												</versionRange>
-												<goals>
-													<goal>migrate</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-									</pluginExecutions>
-								</lifecycleMappingMetadata>
-							</configuration>
-						</plugin>
 					</plugins>
 				</pluginManagement>
 			</build>
